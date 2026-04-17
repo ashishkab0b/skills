@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Log"
+  short_description: "Record project progress checkpoints"
+  default_prompt: "Use $project-log to record the current project progress in PROGRESS.md."
