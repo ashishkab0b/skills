@@ -1,0 +1,4 @@
+interface:
+  display_name: "Log Training Runs"
+  short_description: "Maintain structured ML run logs"
+  default_prompt: "Use $log-training-runs to append a complete training run entry to RUNS.md."
