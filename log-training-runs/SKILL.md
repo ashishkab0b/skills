@@ -23,6 +23,7 @@ Create or update `RUNS.md` in the active project with a concise, audit-friendly 
 4. Append a new entry unless the user asks to edit an existing entry. If the existing log is newest-first, add the entry near the top; if oldest-first, add it at the bottom.
 5. Keep the entry useful but compact. Favor specific filenames, commands, artifact paths, metric names, and observations over generic prose.
 6. If a run is still in progress, label it as `in progress` and record the current checkpoint, last observed output, and what remains to be checked.
+7. If the user provides information about the prior run, update the prior run log as well.
 
 ## Entry Content
 
@@ -49,4 +50,3 @@ Include additional fields that are meaningful for the current run when the avail
 
 - Do not fabricate metrics, artifact paths, commits, or outcomes. Write `unknown`, `not captured`, or `not yet available` when needed.
 - Record enough detail for a future rerun: command, resolved training parameters, config, data version, code version, model/checkpoint, and seed when available.
-- Avoid rewriting old entries.
