@@ -17,6 +17,8 @@ Create or update `RUNS.md` in the active project with a concise, audit-friendly 
    - Timestamp with timezone.
    - Git branch, commit SHA, commit subject, and dirty status.
    - Run command, config files, scripts, notebooks, model names, datasets, checkpoints, seeds, hyperparameters, and environment details available in the conversation or workspace.
+   - When the user provides a CLI command, inspect the referenced training script and config files to identify defaults from `argparse`, `click`, `typer`, dataclasses, config loaders, YAML/JSON/TOML files, shell wrappers, or framework launchers. Combine explicit CLI overrides with script/config defaults into a `Training Parameters` segment.
+   - Resolve specific input and output paths from both the CLI command and script defaults. Prefer project-relative paths when clear, include absolute paths when the command uses them, and mark dynamic or unresolved paths as `unknown` or `computed at runtime`.
    - Inputs tested, hypothesis or substantive question, metrics, notable logs, failures, output artifacts, and next steps.
 4. Append a new entry unless the user asks to edit an existing entry. If the existing log is newest-first, add the entry near the top; if oldest-first, add it at the bottom.
 5. Keep the entry useful but compact. Favor specific filenames, commands, artifact paths, metric names, and observations over generic prose.
@@ -36,7 +38,6 @@ git status --short
 git diff --stat
 ```
 
-For training artifacts, inspect likely output directories without making assumptions. Common names include `runs/`, `outputs/`, `artifacts/`, `checkpoints/`, `logs/`, `wandb/`, `mlruns/`, `tensorboard/`, `results/`, and `models/`.
 
 ## Entry Content
 
@@ -50,20 +51,23 @@ When no established format exists, create `RUNS.md` with a short title and entri
 - Status: completed | in progress | failed
 - Git: branch `main`, commit `abc1234` (`commit subject`), dirty: yes/no
 - Command: `python train.py --config configs/experiment.yaml`
+- Training Parameters: Batch size, learning rate, epochs/steps, optimizer, scheduler, precision, device/distributed settings, seed, model/checkpoint, config values, and other script arguments. Note whether values came from CLI overrides, config files, or script defaults.
 - Purpose: What substantive question, hypothesis, regression, or model behavior this run tested.
-- Inputs: Dataset, split, config, prompts, model weights, seed, notable hyperparameters.
-- Outputs: Checkpoints, logs, reports, tables, plots, model files, eval artifacts, or external run IDs.
+- Inputs: Specific dataset, split, config, prompt, model weight, checkpoint, cache, or manifest paths from the CLI and script defaults.
+- Outputs: Specific checkpoint, log, report, table, plot, model file, eval artifact, cache, external run ID, or output directory paths from the CLI and script defaults.
 - Results: Metrics, qualitative observations, failures, warnings, timing, and resource notes.
 - Next: Follow-up run, cleanup, investigation, or decision.
 ```
 
 Include only fields that are meaningful for the current run. Add fields such as `Hardware`, `Duration`, `Environment`, `Baseline`, `Comparison`, `Run ID`, or `Owner` when the available context supports them.
 
+For long parameter sets, keep `Training Parameters` compact by grouping values in semicolon-separated clauses or a small sub-list. Include defaulted parameters that affect training behavior, especially data paths, output paths, model selection, optimizer settings, schedule, precision, batch/accumulation sizes, epochs/steps, seeds, augmentation, evaluation cadence, logging cadence, checkpoint cadence, resume behavior, and hardware/distributed settings. Omit unrelated script options only when they do not affect the run or reproducibility.
+
 ## Quality Rules
 
 - Do not fabricate metrics, artifact paths, commits, or outcomes. Write `unknown`, `not captured`, or `not yet available` when needed.
 - Prefer links or paths to durable artifacts over pasted logs. Quote only the few log lines needed to explain the outcome.
 - Mention uncommitted changes when present because they affect reproducibility.
-- Record enough detail for a future rerun: command, config, data version, code version, model/checkpoint, and seed when available.
+- Record enough detail for a future rerun: command, resolved training parameters, config, data version, code version, model/checkpoint, and seed when available.
 - Separate observation from interpretation. Results say what happened; next steps say what to do about it.
 - Avoid rewriting old entries except to correct factual mistakes or add a clearly labeled update.
